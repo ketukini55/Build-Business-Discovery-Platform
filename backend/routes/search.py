@@ -1,5 +1,5 @@
 import logging
-from fastapi import APIRouter, Depends, HTTPException, BackgroundTasks
+from fastapi import APIRouter, Depends, HTTPException
 from pydantic import BaseModel
 from typing import Optional, List
 import aiosqlite
@@ -13,6 +13,7 @@ from services.website_checker import check_website_status
 from services.ai_service import generate_business_summary
 
 router = APIRouter()
+# Executor is created lazily and reused; FastAPI shutdown handles process cleanup.
 executor = ThreadPoolExecutor(max_workers=4)
 logger = logging.getLogger(__name__)
 
@@ -62,16 +63,15 @@ async def search_businesses_endpoint(
         
         # Check for website
         website_url = business.get("website")
-        
+        phone = business.get("formatted_phone_number", "")
+
         # Get detailed info if real API
         if not business.get("is_mock") and place_id:
             details = await loop.run_in_executor(executor, get_place_details, place_id)
             if details:
                 website_url = details.get("website", website_url)
-                phone = details.get("formatted_phone_number", "")
+                phone = details.get("formatted_phone_number", phone)
                 address = details.get("formatted_address", address)
-        else:
-            phone = business.get("formatted_phone_number", "")
         
         # Check website status
         website_info = await loop.run_in_executor(

@@ -5,6 +5,12 @@ from bs4 import BeautifulSoup
 from typing import Dict, Any, Optional, List
 import socket
 
+# Email addresses containing these substrings are likely false positives
+EMAIL_FALSE_POSITIVE_PATTERNS = [
+    'example.com', 'test.com', 'domain.com', '@sentry', '@2x',
+    '.png', '.jpg', '.gif', '@email', 'noreply',
+]
+
 def _scrape_website_data(url: str, timeout: int = 10) -> Optional[Dict[str, Any]]:
     """Fetch a URL and extract email and social media links. Returns None on failure."""
     try:
@@ -86,9 +92,7 @@ def extract_email(html_text: str) -> Optional[str]:
     emails = re.findall(email_pattern, html_text)
     
     # Filter out common false positives
-    filtered = [e for e in emails if not any(skip in e.lower() for skip in 
-                ['example.com', 'test.com', 'domain.com', '@sentry', '@2x', 
-                 '.png', '.jpg', '.gif', '@email', 'noreply'])]
+    filtered = [e for e in emails if not any(skip in e.lower() for skip in EMAIL_FALSE_POSITIVE_PATTERNS)]
     
     return filtered[0] if filtered else None
 

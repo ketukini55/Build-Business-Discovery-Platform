@@ -7,13 +7,14 @@ from dotenv import load_dotenv
 load_dotenv()
 
 from models.database import init_db
-from routes.search import router as search_router
+from routes.search import router as search_router, executor
 from routes.businesses import router as businesses_router
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     await init_db()
     yield
+    executor.shutdown(wait=False)
 
 app = FastAPI(
     title="Business Discovery Platform API",

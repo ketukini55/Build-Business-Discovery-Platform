@@ -23,8 +23,8 @@ export default function ResultsSection({ businesses, searchId, isLoading, error 
   if (isLoading) {
     return (
       <div className="w-full max-w-6xl mx-auto">
-        <div className="text-center py-20">
-          <div className="inline-block w-16 h-16 border-4 border-blue-600 border-t-transparent rounded-full animate-spin mb-6" />
+        <div role="status" aria-live="polite" className="text-center py-20">
+          <div aria-hidden="true" className="inline-block w-16 h-16 border-4 border-blue-600 border-t-transparent rounded-full animate-spin mb-6" />
           <h3 className="text-xl font-semibold text-gray-700 mb-2">Searching for businesses...</h3>
           <p className="text-gray-500">This may take a minute. We&apos;re finding businesses and checking their websites.</p>
         </div>

@@ -1,4 +1,5 @@
 import os
+import time
 import googlemaps
 from typing import List, Dict, Any
 
@@ -23,7 +24,6 @@ def search_businesses(country: str, category: str, max_results: int = 20) -> Lis
         
         # Handle pagination
         while len(results) < max_results and "next_page_token" in response:
-            import time
             time.sleep(2)  # Required delay between paginated requests
             response = client.places(query=query, page_token=response["next_page_token"])
             results.extend(response.get("results", []))

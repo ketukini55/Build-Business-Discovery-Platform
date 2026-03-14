@@ -138,12 +138,16 @@ export default function SearchForm({ onSearch, isLoading }: SearchFormProps) {
         <div className="space-y-2">
           <label className="text-sm font-semibold text-gray-700">Filter Options</label>
           <label className="flex items-center gap-3 cursor-pointer mt-3">
-            <div
+            <button
+              type="button"
+              role="switch"
+              aria-checked={filterNoWebsite}
               onClick={() => setFilterNoWebsite(!filterNoWebsite)}
-              className={`relative w-12 h-6 rounded-full transition-colors duration-200 ${filterNoWebsite ? 'bg-blue-600' : 'bg-gray-300'}`}
+              onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); setFilterNoWebsite(!filterNoWebsite); } }}
+              className={`relative w-12 h-6 rounded-full transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 ${filterNoWebsite ? 'bg-blue-600' : 'bg-gray-300'}`}
             >
               <div className={`absolute top-1 w-4 h-4 bg-white rounded-full shadow transition-transform duration-200 ${filterNoWebsite ? 'translate-x-7' : 'translate-x-1'}`} />
-            </div>
+            </button>
             <span className="text-sm text-gray-600">Only show businesses without websites</span>
           </label>
         </div>
